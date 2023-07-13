@@ -1,14 +1,23 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { Fields } from './ContactForm.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/operations';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.items);
 
   const handleSubmit = e => {
     e.preventDefault();
     const { name, number } = e.target;
+    const oldContact = contacts.find(contact => contact.name === name.value);
+
+    if (oldContact) {
+      alert('Sorry, you have contact with such name');
+      e.target.reset();
+      return;
+    }
+
     const contact = {
       name: name.value,
       number: number.value,
